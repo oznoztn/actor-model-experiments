@@ -1,38 +1,69 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using AkkaNet.Nascence.Actors;
+using AkkaNet.Nascence.Irrelevant;
 using AkkaNet.Nascence.Messages;
 
 namespace AkkaNet.Nascence
 {
     class Program
     {
-        static async Task Main(string[] args)
+        private static ActorSystem _movieStreamingActorSystem;
+
+        private static void Main(string[] args)
         {
-            ActorSystem movieActorSystem = ActorSystem.Create(nameof(movieActorSystem));
-            Console.WriteLine("Actor system created.");
+            Console.WriteLine("Creating MovieStreamingActorSystem");
+            _movieStreamingActorSystem = ActorSystem.Create("MovieStreamingActorSystem");
 
-            Props userActorProps = Props.Create<UserActor>();
-            IActorRef userActorRef = movieActorSystem.ActorOf(userActorProps, nameof(UserActor));
+            Console.WriteLine("Creating actor supervisory hierarchy");
+            _movieStreamingActorSystem.ActorOf(Props.Create<PlaybackActor>(), "Playback");
 
-            Console.ReadKey();
-            Console.WriteLine("Sending a PlayMovieMessage (Anatomy of a Murder)");
-            userActorRef.Tell(new PlayMovieMessage("Anatomy of a Murder"));
 
-            Console.ReadKey();
-            Console.WriteLine("Sending a PlayMovieMessage (To Kill a Mockingbird)");
-            userActorRef.Tell(new PlayMovieMessage("To Kill a Mockingbird"));
+            do
+            {
+                ShortPause();
 
-            Console.ReadKey();
-            Console.WriteLine("Sending a StopMovieMessage");
-            userActorRef.Tell(new StopMovieMessage());
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("enter a command and hit enter");
 
-            Console.ReadKey();
-            Console.WriteLine("Sending a StopMovieMessage");
-            userActorRef.Tell(new StopMovieMessage());
+                var command = Console.ReadLine();
 
-            await movieActorSystem.Terminate();
+                if (command.StartsWith("play"))
+                {
+                    int userId = int.Parse(command.Split(',')[1]);
+                    string movieTitle = command.Split(',')[2];
+
+                    var message = new PlayMovieMessage(movieTitle, userId);
+                    _movieStreamingActorSystem.ActorSelection("/user/Playback/UserCoordinator").Tell(message);
+                }
+
+                if (command.StartsWith("stop"))
+                {
+                    int userId = int.Parse(command.Split(',')[1]);
+
+                    var message = new StopMovieMessage(userId);
+                    _movieStreamingActorSystem.ActorSelection("/user/Playback/UserCoordinator").Tell(message);
+                }
+
+                if (command == "exit")
+                {
+                    _movieStreamingActorSystem.Terminate().Wait();
+                    Console.WriteLine("Actor system shutdown");
+                    Console.ReadKey();
+
+                    Environment.Exit(1);
+                    return;
+                }
+
+            } while (true);
+        }
+
+        private static void ShortPause()
+        {
+            Thread.Sleep(450);
         }
     }
 }
