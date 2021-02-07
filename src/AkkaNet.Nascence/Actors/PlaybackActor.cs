@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq.Expressions;
 using Akka.Actor;
-using AkkaNet.Nascence.Irrelevant;
+using AkkaNet.MovieStreaming.Irrelevant;
 
-namespace AkkaNet.Nascence.Actors
+namespace AkkaNet.MovieStreaming.Actors
 {
     public class PlaybackActor : ReceiveActor
     {

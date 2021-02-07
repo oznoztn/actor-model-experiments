@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Akka.Actor;
-using AkkaNet.Nascence.Messages;
+using AkkaNet.MovieStreaming.Messages;
 
-namespace AkkaNet.Nascence.Actors
+namespace AkkaNet.MovieStreaming.Actors
 {
     public class UserCoordinatorActor : ReceiveActor
     {

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Akka.Actor;
-using AkkaNet.Nascence.Actors;
-using AkkaNet.Nascence.Irrelevant;
-using AkkaNet.Nascence.Messages;
+using AkkaNet.MovieStreaming.Actors;
+using AkkaNet.MovieStreaming.Messages;
 
-namespace AkkaNet.Nascence
+namespace AkkaNet.MovieStreaming
 {
     class Program
     {

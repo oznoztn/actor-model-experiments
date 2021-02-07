@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace AkkaNet.Nascence.Exceptions
+namespace AkkaNet.MovieStreaming.Exceptions
 {
     public class SimulatedCorruptStateException : Exception
     {

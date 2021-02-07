@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace AkkaNet.Nascence.Irrelevant
+namespace AkkaNet.MovieStreaming.Irrelevant
 {
     public static class ColorConsole
     {

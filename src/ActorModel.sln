@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaNet.Nascence", "AkkaNet.Nascence\AkkaNet.Nascence.csproj", "{691FD3EB-BD18-440C-994A-5564EFE05066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaNet.MovieStreaming", "AkkaNet.Nascence\AkkaNet.MovieStreaming.csproj", "{691FD3EB-BD18-440C-994A-5564EFE05066}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

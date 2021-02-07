@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Akka.Actor;
-using AkkaNet.Nascence.Exceptions;
-using AkkaNet.Nascence.Irrelevant;
-using AkkaNet.Nascence.Messages;
+using AkkaNet.MovieStreaming.Exceptions;
+using AkkaNet.MovieStreaming.Irrelevant;
+using AkkaNet.MovieStreaming.Messages;
 
-namespace AkkaNet.Nascence.Actors
+namespace AkkaNet.MovieStreaming.Actors
 {
     public class MoviePlayCounterActor : ReceiveActor
     {

@@ -1,4 +1,4 @@
-﻿namespace AkkaNet.Nascence.Messages
+﻿namespace AkkaNet.MovieStreaming.Messages
 {
     public class IncrementPlayCountMessage
     {

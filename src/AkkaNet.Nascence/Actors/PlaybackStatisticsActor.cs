@@ -1,9 +1,9 @@
 ﻿using System;
 using Akka.Actor;
-using AkkaNet.Nascence.Exceptions;
-using AkkaNet.Nascence.Irrelevant;
+using AkkaNet.MovieStreaming.Exceptions;
+using AkkaNet.MovieStreaming.Irrelevant;
 
-namespace AkkaNet.Nascence.Actors
+namespace AkkaNet.MovieStreaming.Actors
 {
     public class PlaybackStatisticsActor : ReceiveActor
     {

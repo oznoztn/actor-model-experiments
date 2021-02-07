@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AkkaNet.Nascence.Exceptions
+namespace AkkaNet.MovieStreaming.Exceptions
 {
     public class SimulatedInvalidMovieException : Exception
     {
