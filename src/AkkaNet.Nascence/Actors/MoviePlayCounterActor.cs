@@ -25,12 +25,12 @@ namespace AkkaNet.MovieStreaming.Actors
         {
             if (message.MovieTitle == "corrupt")
             {
-                throw new SimulatedInvalidMovieException();
+                throw new SimulatedInvalidMovieException(message.MovieTitle);
             }
 
             if (message.MovieTitle == "boom")
             {
-                throw new SimulatedCorruptStateException();
+                throw new SimulatedCorruptStateException(message.MovieTitle);
             }
 
             if (_moviePlayCounts.ContainsKey(message.MovieTitle))

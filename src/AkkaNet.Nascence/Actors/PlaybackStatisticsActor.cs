@@ -24,14 +24,21 @@ namespace AkkaNet.MovieStreaming.Actors
         {
             if (exception is SimulatedCorruptStateException)
             {
+                _loggingAdapter.Error(exception, "PlaybackStatisticsActor PlaybackStatisticsActor supervisor strategy stopping child due to ActorInitializationException");
+
                 return Directive.Restart;
             }
 
             if (exception is SimulatedInvalidMovieException)
             {
+                var simulatedException = exception as SimulatedInvalidMovieException;
+
+                _loggingAdapter.Error(exception, "PlaybackStatisticsActor supervisor strategy resuming child due to terrible movie {0}", simulatedException.MovieTitle);
+                
                 return Directive.Resume;
             }
 
+            _loggingAdapter.Error(exception, "PlaybackStatisticsActor supervisor strategy restarting child due to unexpected exception");
             return Directive.Restart;
         }
 
