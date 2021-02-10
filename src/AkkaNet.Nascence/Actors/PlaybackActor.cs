@@ -1,11 +1,14 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Event;
 using AkkaNet.MovieStreaming.Irrelevant;
 
 namespace AkkaNet.MovieStreaming.Actors
 {
     public class PlaybackActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _loggingAdapter = Context.GetLogger();
+
         public PlaybackActor()
         {
             Context.ActorOf(Props.Create<UserCoordinatorActor>(), "UserCoordinator");
@@ -15,24 +18,24 @@ namespace AkkaNet.MovieStreaming.Actors
         #region Lifecycle hooks
         protected override void PreStart()
         {
-            ColorConsole.WriteLineGreen("PlaybackActor PreStart");
+            _loggingAdapter.Debug("PlaybackActor PreStart");
         }
 
         protected override void PostStop()
         {
-            ColorConsole.WriteLineGreen("PlaybackActor PostStop");
+            _loggingAdapter.Debug("PlaybackActor PostStop");
         }
 
         protected override void PreRestart(Exception reason, object message)
         {
-            ColorConsole.WriteLineGreen("PlaybackActor PreRestart because: " + reason);
+            _loggingAdapter.Debug("PlaybackActor PreRestart because: {0}", message);
 
             base.PreRestart(reason, message);
         }
 
         protected override void PostRestart(Exception reason)
         {
-            ColorConsole.WriteLineGreen("PlaybackActor PostRestart because: " + reason);
+            _loggingAdapter.Debug("PlaybackActor PostRestart because: {0}", reason.Message);
 
             base.PostRestart(reason);
         }

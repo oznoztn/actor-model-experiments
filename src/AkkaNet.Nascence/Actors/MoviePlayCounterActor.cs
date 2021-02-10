@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Akka.Actor;
+using Akka.Event;
 using AkkaNet.MovieStreaming.Exceptions;
 using AkkaNet.MovieStreaming.Irrelevant;
 using AkkaNet.MovieStreaming.Messages;
@@ -9,10 +10,12 @@ namespace AkkaNet.MovieStreaming.Actors
 {
     public class MoviePlayCounterActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _loggingAdapter = Context.GetLogger();
+
         private readonly Dictionary<string, int> _moviePlayCounts;
         public MoviePlayCounterActor()
         {
-            ColorConsole.WriteLine("MoviePlayCounterActor constructor executing", ConsoleColor.Magenta);
+            _loggingAdapter.Debug("MoviePlayCounterActor constructor executing");
             _moviePlayCounts = new Dictionary<string, int>();
 
             Receive<IncrementPlayCountMessage>(HandleIncrementMessage);
@@ -39,7 +42,7 @@ namespace AkkaNet.MovieStreaming.Actors
                 _moviePlayCounts.Add(message.MovieTitle, 1);
             }
 
-            ColorConsole.WriteLine($"MoviePlayCounterActor '{message.MovieTitle}' has been watched {_moviePlayCounts[message.MovieTitle]} times.", ConsoleColor.Magenta);
+            _loggingAdapter.Info("MoviePlayCounterActor '{0}' has been watched {1} times.", message.MovieTitle, _moviePlayCounts[message.MovieTitle]);
         }
     }
 }

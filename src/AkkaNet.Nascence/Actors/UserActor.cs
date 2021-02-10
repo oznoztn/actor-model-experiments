@@ -1,5 +1,6 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Event;
 using AkkaNet.MovieStreaming.Irrelevant;
 using AkkaNet.MovieStreaming.Messages;
 
@@ -9,13 +10,14 @@ namespace AkkaNet.MovieStreaming.Actors
     {
         private readonly int _userId;
         private string _currentlyWatching;
+        private ILoggingAdapter _loggingAdapter = Context.GetLogger();
 
         public UserActor(int userId)
         {
             _userId = userId;
             
-            Console.WriteLine($"UserActor:{userId} Constructor");
-            ColorConsole.WriteLine("Setting initial behavior to 'Stopped'", ConsoleColor.DarkCyan);
+            _loggingAdapter.Debug("UserActor:{0} Constructor", userId);
+            _loggingAdapter.Debug("Setting initial behavior to 'Stopped'");
             
             Stopped();
         }
@@ -23,27 +25,28 @@ namespace AkkaNet.MovieStreaming.Actors
         // Represents the 'playing' behavior
         private void Playing()
         {
-            Receive<PlayMovieMessage>(message =>
-                ColorConsole.WriteLineRed(
-                    $"ERROR: User:{_userId} Cannot start playing another movie ({message}) before stopping the existing one."));
+            Receive<PlayMovieMessage>(message => 
+                _loggingAdapter
+                    .Warning("ERROR: User:{0} Cannot start playing another movie ({1}) before stopping the existing one.", _userId, message.Title));
+            
             Receive<StopMovieMessage>(message => StopPlayingMovie());
 
-            ColorConsole.WriteLine($"UserActor:{_userId} has now become 'Playing'.", ConsoleColor.DarkCyan);
+            _loggingAdapter.Info("UserActor:{0} has now become 'Playing'.", _userId);
         }
 
         // Represents the 'stopped' behavior
         private void Stopped()
         {
             Receive<PlayMovieMessage>(message => StartPlayingMovie(message.Title));
-            Receive<StopMovieMessage>(message => ColorConsole.WriteLineRed($"ERROR: User:{_userId} Cannot stop if nothing is playing."));
+            Receive<StopMovieMessage>(message => _loggingAdapter.Warning("ERROR: User:{0} Cannot stop if nothing is playing.", _userId));
 
-            ColorConsole.WriteLine($"UserActor:{_userId} has now become 'Stopped'.", ConsoleColor.DarkCyan);
+            _loggingAdapter.Info("UserActor:{0} has now become 'Stopped'.", _userId);
         }
 
         private void StartPlayingMovie(string title)
         {
             _currentlyWatching = title;
-            ColorConsole.WriteLineGreen($"User:{_userId} is watching {title}.");
+            _loggingAdapter.Info("User:{0} is watching {1}.", _userId, title);
 
             Context
                 .ActorSelection("/user/Playback/PlaybackStatistics/MoviePlayCounter")
@@ -54,34 +57,31 @@ namespace AkkaNet.MovieStreaming.Actors
 
         private void StopPlayingMovie()
         {
-            string temp = _currentlyWatching;
-            _currentlyWatching = null;
-            ColorConsole.WriteLineGreen($"User:{_userId} has stopped watching {temp}.");
-
+            _loggingAdapter.Info("User:{0} has stopped watching {1}.", _userId, _currentlyWatching);
             Become(Stopped);
         }
 
         protected override void PreStart()
         {
-            ColorConsole.WriteLineYellow($"UserActor:{_userId} PreStart");
+            _loggingAdapter.Debug("UserActor:{0} PreStart", _userId);
             base.PreStart();
         }
 
         protected override void PostStop()
         {
-            ColorConsole.WriteLineYellow($"UserActor:{_userId} PostStop");
+            _loggingAdapter.Debug("UserActor:{0} PostStop", _userId);
             base.PostStop();
         }
 
         protected override void PreRestart(Exception reason, object message)
         {
-            ColorConsole.WriteLineYellow($"UserActor:{_userId} PreRestart");
+            _loggingAdapter.Debug("UserActor:{0} PreRestart", _userId);
             base.PreRestart(reason, message);
         }
 
         protected override void PostRestart(Exception reason)
         {
-            ColorConsole.WriteLineYellow($"UserActor:{_userId} PostRestart");
+            _loggingAdapter.Debug("UserActor:{0} PostRestart", _userId);
             base.PostRestart(reason);
         }
     }

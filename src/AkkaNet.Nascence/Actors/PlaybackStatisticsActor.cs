@@ -1,5 +1,6 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Event;
 using AkkaNet.MovieStreaming.Exceptions;
 using AkkaNet.MovieStreaming.Irrelevant;
 
@@ -7,6 +8,8 @@ namespace AkkaNet.MovieStreaming.Actors
 {
     public class PlaybackStatisticsActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _loggingAdapter = Context.GetLogger();
+
         public PlaybackStatisticsActor()
         {
             Context.ActorOf(Props.Create<MoviePlayCounterActor>(), "MoviePlayCounter");
@@ -35,24 +38,24 @@ namespace AkkaNet.MovieStreaming.Actors
         #region Lifecycle hooks
         protected override void PreStart()
         {
-            ColorConsole.WriteLine("PlaybackStatisticsActor PreStart", ConsoleColor.White);
+            _loggingAdapter.Debug("PlaybackStatisticsActor PreStart");
         }
 
         protected override void PostStop()
         {
-            ColorConsole.WriteLine("PlaybackStatisticsActor PostStop", ConsoleColor.White);
+            _loggingAdapter.Debug("PlaybackStatisticsActor PostStop");
         }
 
         protected override void PreRestart(Exception reason, object message)
         {
-            ColorConsole.WriteLine($"PlaybackStatisticsActor PreRestart because: {reason.Message}", ConsoleColor.White);
+            _loggingAdapter.Debug("PlaybackStatisticsActor PreRestart because: {0}", reason.Message);
 
             base.PreRestart(reason, message);
         }
 
         protected override void PostRestart(Exception reason)
         {
-            ColorConsole.WriteLine($"PlaybackStatisticsActor PostRestart because: {reason.Message}", ConsoleColor.White);
+            _loggingAdapter.Debug("PlaybackStatisticsActor PostRestart because: {0}", reason.Message);
 
             base.PostRestart(reason);
         }
